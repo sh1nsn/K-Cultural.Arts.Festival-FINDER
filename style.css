@@ -1,0 +1,234 @@
+/* --- Fonts & Base --- */
+:root {
+    --bg-main: #181819;    
+    --point-color: #D4FF00;   
+    --second-color: #a4b54f;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.5);
+    
+    --map-fill: #2a2a2a;      
+    --map-stroke: #444444;
+    --grid-line: rgba(255, 255, 255, 0.1); 
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: "bitcount-grid-single-circle", "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* --- Intro --- */
+.intro-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    /* 배경을 반투명 검정으로 설정 */
+    background-color: rgba(18, 18, 18, 0.3);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    
+    z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    cursor: pointer; transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+.intro-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.intro-text { text-align: center; }
+.intro-title { 
+    font-size: 3rem; letter-spacing: -2px; margin-bottom: 20px; 
+    color: var(--text-primary); text-transform: uppercase; 
+    text-shadow: 0 0 20px rgba(0,0,0,0.5); /* 그림자 */
+}
+.intro-sub { 
+    font-size: 1rem; color: var(--point-color); letter-spacing: 2px; text-transform: uppercase; 
+    animation: blink 1.5s infinite; 
+    text-shadow: 0 0 10px rgba(212,255,0, 0.3); /* 포인트 컬러 발광 효과 */
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+/* --- Header --- */
+header {
+    padding: 3rem 4rem; position: absolute; top: 0; left: 0; width: 100%;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    z-index: 50; pointer-events: none;
+}
+h1 { font-size: 1.5rem; pointer-events: auto; letter-spacing: -0.5px; }
+.header-sub { 
+    font-size: 0.7rem; color: var(--second-color); letter-spacing: 2px; text-transform: uppercase; 
+    animation: blink 1.5s infinite; 
+    text-shadow: 0 0 10px rgba(212,255,0, 0.3); /* 포인트 컬러 발광 효과 */
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.view-toggle { display: flex; gap: 30px; pointer-events: auto; }
+.toggle-btn { 
+    background: none; border: none; color: var(--text-secondary); font-family: inherit; font-size: 1rem; 
+    cursor: pointer; letter-spacing: 1px; padding-bottom: 2px; transition: all 0.3s; 
+}
+.toggle-btn.active, .toggle-btn:hover { 
+    color: var(--point-color); 
+    text-shadow: 0 0 8px rgba(212, 255, 0, 0.4); /* 호버 시 네온 효과 */
+}
+
+/* --- Container --- */
+.main-container { width: 100%; height: 100%; position: relative; }
+.view-section {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
+    display: flex; justify-content: center; align-items: center;
+}
+.view-section.active-view { opacity: 1; pointer-events: auto; }
+
+/* --- Map Controls --- */
+.map-controls {
+    position: absolute; bottom: 4rem; right: 4rem; 
+    display: flex; flex-direction: column; gap: 20px;
+    z-index: 100; align-items: flex-end; max-height: 70vh;
+}
+.region-nav {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; text-align: right;
+    max-height: 400px; overflow-y: auto; padding-right: 5px;
+}
+.region-nav::-webkit-scrollbar { width: 3px; }
+.region-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+.region-nav button {
+    background: none; border: none; color: var(--text-secondary); font-family: inherit; font-size: 0.85rem;
+    cursor: pointer; text-align: right; white-space: nowrap; transition: all 0.3s; padding: 0; letter-spacing: 0.5px; text-transform: uppercase;
+}
+.region-nav button:hover { color: var(--point-color); transform: translateX(-3px); }
+.zoom-nav { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; margin-top: 10px; }
+.zoom-nav button {
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: var(--text-secondary); 
+    width: 40px; height: 40px; border-radius: 50%;
+    font-family: inherit; font-size: 1.2rem; cursor: pointer; transition: all 0.3s; 
+    display: flex; justify-content: center; align-items: center; padding-bottom: 3px;
+    backdrop-filter: blur(5px); /* 버튼에도 살짝 글래스 효과 */
+}
+.zoom-nav button:hover { color: var(--bg-main); background: var(--point-color); border-color: var(--point-color); }
+#zoom-reset { font-size: 1rem; padding-bottom: 0; }
+
+
+.info-card {
+    position: absolute; bottom: 4rem; left: 4rem; 
+    display: flex; gap: 20px; align-items: flex-end;
+    
+
+    background-color: rgba(18, 18, 18, 0.3); 
+    backdrop-filter: blur(5px);             
+    -webkit-backdrop-filter: blur(5px);
+    
+    /* 테두리 경계 */
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);  
+
+    /* 애니메이션 */
+    opacity: 0; transform: translateY(10px); 
+    transition: all 0.5s ease; 
+    pointer-events: none; 
+    z-index: 100;
+}
+
+.info-card.show { opacity: 1; transform: translateY(0); }
+
+.info-poster { 
+    width: 80px; height: 110px; 
+    background: rgba(255,255,255,0.1); flex-shrink: 0; overflow: hidden; 
+    border-radius: 4px; 
+}
+.info-poster img { width: 100%; height: 100%; object-fit: cover; }
+
+.info-text { 
+    display: flex; flex-direction: column; justify-content: flex-end; 
+    padding-bottom: 2px; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+}
+.info-region { color: var(--point-color); font-size: 0.75rem; letter-spacing: 1px; margin-bottom: 5px; text-transform: uppercase;}
+.info-date { font-size: 0.75rem; color: rgba(255,255,255,0.8); margin-bottom: 8px; }
+.info-title { font-size: 1.5rem; line-height: 1.1; margin-bottom: 5px; color: #fff; }
+.info-desc { 
+    font-family: "Pretendard", sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.8); 
+    max-width: 300px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 400; 
+}
+/* --- Map View --- */
+#korea-map { height: 75vh; max-width: 100%; cursor: grab; overflow: visible; }
+#korea-map:active { cursor: grabbing; } 
+.region-path { 
+    fill: var(--map-fill); stroke: var(--map-stroke); stroke-width: 0.5; transition: fill 0.3s; vector-effect: non-scaling-stroke; 
+}
+.region-path:hover { fill: #3a3a3a; } /* 호버 시 약간 밝아짐 */
+.map-marker { 
+    fill: var(--point-color); cursor: pointer; transform-box: fill-box; transition: all 0.3s ease; 
+    filter: drop-shadow(0 0 5px rgba(212, 255, 0, 0.6)); /* 마커 발광 효과 */
+}
+.map-marker:hover { opacity: 1; r: 12; fill: #fff; } /* 호버 시 흰색 + 크기 증가 */
+
+/* --- Calendar View --- */
+.calendar-wrapper { width: 85%; max-width: 1100px; height: 70vh; display: flex; gap: 40px; }
+.cal-main { flex: 7; display: flex; flex-direction: column; }
+.cal-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; }
+.cal-title { font-size: 2.5rem; letter-spacing: -1px; }
+.cal-controls span { margin-left: 20px; cursor: pointer; font-size: 1.5rem; user-select: none; color: var(--text-secondary); transition: color 0.3s; }
+.cal-controls span:hover { color: var(--point-color); }
+.cal-days-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; color: var(--text-secondary); font-size: 0.7rem; padding-bottom: 15px; letter-spacing: 1px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(6, 1fr); flex: 1; border-top: 1px solid var(--grid-line); }
+.cal-cell { border-bottom: 1px solid var(--grid-line); position: relative; padding: 35px 0 5px 0; display: flex; flex-direction: column; justify-content: flex-start; gap: 12px; }
+.cal-cell:hover { background: rgba(255,255,255,0.02); }
+.cal-cell:hover .date-num { color: var(--point-color); }
+.cal-cell.other-month .date-num { opacity: 0.3; }
+.date-num { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; color: var(--text-secondary); transition: color 0.3s; }
+
+/* 캘린더 이벤트 바 스타일 */
+.event-bar, .event-spacer { position: relative; width: 100%; height: 2px; background-color: var(--point-color); cursor: pointer; box-shadow: 0 0 4px rgba(212,255,0,0.4); }
+.event-spacer { background-color: transparent; pointer-events: none; box-shadow: none; }
+.event-bar:hover { height: 4px; background-color: #fff; }
+.event-bar::after { content: ''; position: absolute; top: 50%; transform: translateY(-50%); width: 6px; height: 6px; background-color: var(--point-color); border-radius: 50%; display: none; }
+
+.event-bar.type-single { width: 6px; height: 6px; border-radius: 50%; margin: 0 auto; background: var(--point-color); } 
+.event-bar.type-single::after { display: none; }
+.event-bar.type-start { margin-left: 5px; width: calc(100% - 5px); border-radius: 2px 0 0 2px; }
+.event-bar.type-end { margin-right: 5px; width: calc(100% - 5px); border-radius: 0 2px 2px 0; }
+.event-bar.type-mid { width: 100%; }
+
+/* Sidebar List Styles */
+.cal-sidebar {
+    flex: 3; border-left: 1px solid var(--grid-line); padding-left: 30px; display: flex; flex-direction: column;
+}
+.cal-sidebar h3 { font-size: 1.2rem; color: var(--text-primary); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--grid-line); }
+.month-event-list { flex: 1; overflow-y: auto; padding-right: 5px; }
+.month-event-list::-webkit-scrollbar { width: 3px; }
+.month-event-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+
+.event-item {
+    display: flex; gap: 15px; margin-bottom: 20px; cursor: pointer; align-items: center;
+    padding: 10px; border-radius: 8px; border: 1px solid transparent; transition: all 0.3s;
+}
+.event-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); transform: translateX(5px); }
+.event-thumb {
+    width: 50px; height: 50px; border-radius: 4px; overflow: hidden; flex-shrink: 0; background: #333;
+}
+.event-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: opacity 0.3s; }
+.event-item:hover .event-thumb img { opacity: 1; }
+.event-info { display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+.event-region { font-size: 0.65rem; color: var(--point-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+.event-title { font-size: 0.9rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
+.event-date { font-size: 0.7rem; color: var(--text-secondary); }
+
+/* Detail Page */
+.detail-body { overflow-y: auto; background: var(--bg-main); }
+.close-detail-btn { position: fixed; top: 3rem; right: 4rem; font-size: 2rem; color: var(--text-primary); text-decoration: none; z-index: 100; transition: transform 0.3s; }
+.close-detail-btn:hover { transform: rotate(90deg); color: var(--point-color); }
+.detail-container { max-width: 900px; margin: 0 auto; padding: 120px 20px; }
+.detail-header { display: flex; gap: 20px; align-items: baseline; margin-bottom: 1rem; }
+.detail-region { color: var(--point-color); font-size: 0.9rem; letter-spacing: 1px; }
+.detail-date { color: var(--text-secondary); font-size: 0.9rem; }
+.detail-title { font-size: 3.5rem; margin-bottom: 3rem; letter-spacing: -1px; line-height: 1.1; }
+.detail-content-row { display: flex; gap: 60px; }
+.detail-image-box { flex: 1; border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.detail-image-box img { width: 100%; display: block; opacity: 0.9; } 
+.detail-desc-box { flex: 1; padding-top: 10px; }
+.detail-desc-box p { font-family: "Pretendard", sans-serif; font-size: 1rem; line-height: 1.7; color: rgba(255,255,255,0.8); margin-bottom: 40px; font-weight: 400; }
+.ticket-btn { padding: 12px 30px; background: transparent; color: var(--point-color); border: 1px solid var(--point-color); border-radius: 0; font-family: inherit; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; }
+.ticket-btn:hover { background: var(--point-color); color: var(--bg-main); box-shadow: 0 0 15px rgba(212, 255, 0, 0.4); font-weight: bold; }
