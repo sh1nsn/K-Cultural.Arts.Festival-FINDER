@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Festival Detail</title>
+    <link rel="stylesheet" href="https://use.typekit.net/lwe3jit.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="detail-body">
+
+    <a href="#" class="close-detail-btn" id="closeBtn">×</a>
+
+    <div class="detail-container">
+        <div class="detail-header">
+            <span class="detail-region" id="d-region">REGION</span>
+            <span class="detail-date" id="d-date">YYYY.MM.DD</span>
+        </div>
+        
+        <h1 class="detail-title" id="d-title">Title</h1>
+        
+        <div class="detail-content-row">
+            <div class="detail-image-box">
+                <img id="d-img" src="" alt="Festival Image">
+            </div>
+            <div class="detail-desc-box">
+                <p id="d-desc">Description...</p>
+                <button class="ticket-btn">예매하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const viewFrom = params.get('view');
+
+        if (id) {
+            const data = festivalData.find(d => d.id === id);
+            if (data) {
+                document.getElementById('d-region').innerText = data.region;
+                document.getElementById('d-date').innerText = data.date;
+                document.getElementById('d-title').innerText = data.title;
+                document.getElementById('d-desc').innerText = data.desc;
+                document.getElementById('d-img').src = data.img;
+            }
+        }
+
+        const closeBtn = document.getElementById('closeBtn');
+        if (viewFrom === 'calendar') {
+            closeBtn.href = 'index.html?view=calendar';
+        } else {
+            closeBtn.href = 'index.html?view=map';
+        }
+    </script>
+</body>
+</html>
