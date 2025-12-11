@@ -86,7 +86,7 @@ mapPaths.forEach(path => {
         // 클릭 시 이벤트가 부모로 전파되는 것 방지 (안전장치)
         e.stopPropagation();
 
-        // 3. 클릭한 구역의 'name' 속성 가져오기 (HTML에 name="Seoul" 처럼 되어 있어야 함)
+        // 3. 클릭한 구역의 'name' 속성 가져오기
         const regionName = path.getAttribute('name'); 
 
         // 4. allRegions 데이터에서 이름이 같은 친구 찾기
@@ -318,9 +318,8 @@ mapMarkers.forEach(marker => {
     const zoomResetBtn = document.getElementById('zoom-reset');
 
     if (zoomInBtn) {
-        // [수정됨] 줌인 버튼: 현재 화면 중앙을 유지하며 확대
         zoomInBtn.addEventListener('click', () => {
-            const zoomFactor = 1.4; // 확대할 배율 (1.4배씩)
+            const zoomFactor = 1.4;
             const newScale = Math.min(scale * zoomFactor, 10); // 최대 10배 제한
 
             if (newScale !== scale) { // 더 이상 확대할 수 없으면 계산 안 함
@@ -328,7 +327,6 @@ mapMarkers.forEach(marker => {
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
 
-                // ★ 핵심 수식: 중심점 유지 좌표 보정
                 // 새로운위치 = 화면중심 - (화면중심 - 기존위치) * (새비율 / 옛비율)
                 pointX = centerX - (centerX - pointX) * (newScale / scale);
                 pointY = centerY - (centerY - pointY) * (newScale / scale);
@@ -338,7 +336,6 @@ mapMarkers.forEach(marker => {
             }
         });
 
-        // [수정됨] 줌아웃 버튼: 현재 화면 중앙을 유지하며 축소
         zoomOutBtn.addEventListener('click', () => {
             const zoomFactor = 1.4;
             const newScale = Math.max(scale / zoomFactor, 1); // 최소 1배 제한
